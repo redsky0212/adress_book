@@ -1,6 +1,8 @@
 import React from 'react';
 import ContactInfo from './ContactInfo';
 import ContactDetails from './ContactDetails';
+import ContactCreate from './ContactCreate';
+import { Map } from 'immutable'
 
 export default class Contact extends React.Component {
     constructor( props ){
@@ -26,6 +28,10 @@ export default class Contact extends React.Component {
         
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
+
+        this.handlerCreate = this.handlerCreate.bind(this);
+        this.handlerRemove = this.handlerRemove.bind(this);
+        this.handlerEdit = this.handlerEdit.bind(this);
     }
 
     handleClick(key){
@@ -38,6 +44,23 @@ export default class Contact extends React.Component {
         this.setState( {
             keyword: e.target.value
         });
+    }
+    handlerCreate(contact){
+
+        var arr = Array.from(this.state.contactData); 
+        arr.push(contact);
+
+        this.setState({
+            contactData: arr
+        });
+    }
+    handlerRemove(){
+        //this.setState({
+            //contactData: update(this.state.contactData,)
+        //})
+    }
+    handlerEdit(){
+
     }
 
     render(){
@@ -65,9 +88,10 @@ export default class Contact extends React.Component {
                 <div>{mapToComponents(this.state.contactData)}</div>
                 {/* 선택한 내용 보여지는 부분 */}
                 <ContactDetails 
-                    isSelected={this.state.selectedKey != -1}
+                    isSelected={this.state.selectedKey !== -1}
                     contact={this.state.contactData[this.state.selectedKey]}
                 ></ContactDetails>
+                <ContactCreate onCreate={this.handlerCreate}></ContactCreate>
             </div>
         );
     }
