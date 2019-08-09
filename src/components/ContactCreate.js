@@ -25,6 +25,7 @@ export default class ContactCreate extends Component {
         };
 
         this.props.onCreate(contact);
+        // 초기화
         this.setState({
             name:'',
             phone:''

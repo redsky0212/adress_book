@@ -2,7 +2,7 @@ import React from 'react';
 import ContactInfo from './ContactInfo';
 import ContactDetails from './ContactDetails';
 import ContactCreate from './ContactCreate';
-import { Map } from 'immutable'
+import { Map, update, List } from 'immutable'
 
 export default class Contact extends React.Component {
     constructor( props ){
@@ -47,20 +47,28 @@ export default class Contact extends React.Component {
     }
     handlerCreate(contact){
 
-        var arr = Array.from(this.state.contactData); 
-        arr.push(contact);
+        var _data = Array.from(this.state.contactData);
+        _data.push(contact);
 
         this.setState({
-            contactData: arr
+            contactData: _data
         });
     }
     handlerRemove(){
-        //this.setState({
-            //contactData: update(this.state.contactData,)
-        //})
-    }
-    handlerEdit(){
+        if( this.state.selectedKey < 0 ){
+            return;
+        }
 
+        var _data = List(this.state.contactData).splice(this.state.selectedKey, 1);
+        this.setState({
+            contactData: Array.from(_data),
+            selectedKey: -1
+        })
+    }
+    handlerEdit(name, phone){
+        this.setState({
+            contactData: List(this.state.contactData).set(this.state.selectedKey, Map({ name, phone })).toJS()
+        })
     }
 
     render(){
@@ -90,6 +98,8 @@ export default class Contact extends React.Component {
                 <ContactDetails 
                     isSelected={this.state.selectedKey !== -1}
                     contact={this.state.contactData[this.state.selectedKey]}
+                    onRemove={this.handlerRemove}
+                    onEdit={this.handlerEdit}
                 ></ContactDetails>
                 <ContactCreate onCreate={this.handlerCreate}></ContactCreate>
             </div>
